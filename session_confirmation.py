@@ -26,8 +26,10 @@ if api.requires_2sa:
 
   while True:
     code = click.prompt('Enter the verification code: ')
-    if not api.validate_verification_code(device, code):
+    if api.validate_verification_code(device, code):
       break
+    else:
+      print('Invalid verification code.')
 
 from datetime import datetime, timedelta
 from gspread import authorize
