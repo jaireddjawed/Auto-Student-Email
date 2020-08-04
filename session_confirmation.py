@@ -1,8 +1,14 @@
 from pyicloud import PyiCloudService
 import click
+import json
+import os
 
-api = PyiCloudService('jairedjawed@icloud.com', '&WOMEfF$k7I36z4^9g')
+settings_file = open(os.path.join('./settings.json'), 'r')
+SETTINGS = json.load(settings_file)
 
+api = PyiCloudService(SETTINGS['icloud_email'], SETTINGS['icloud_password'])
+
+# Authenticate into icloud account
 if api.requires_2sa:
   print('Two-factor authentication is required. Please select a device.')
 
@@ -36,6 +42,7 @@ next_day = datetime.now() + timedelta(days=1)
 # get all events for the next day from icloud calendar
 events = api.calendar.events(next_day, next_day) or []
 
+# permissions needed from google account to access spreadsheet
 scope = [
   'https://spreadsheets.google.com/feeds',
   'https://www.googleapis.com/auth/drive'
@@ -44,15 +51,19 @@ scope = [
 creds = ServiceAccountCredentials.from_json_keyfile_name('./credentials.json', scope)
 client = authorize(creds)
 
-SHEET_TITLE = 'Tutor Tracking <Jaired Jawed>'
+# the student roster is the second sheet
 ROSTER_SHEET = 1
-sheet = client.open(SHEET_TITLE).worksheets()[ROSTER_SHEET]
+
+sheet = client.open(SETTINGS['sheet_title']).worksheets()[ROSTER_SHEET]
 students = array(sheet.get_all_values())
 
 for i in range(len(events)):
+  # we can check if its a bootcamp session depending on the event's title
   is_bootcamp_session = events[i]['title'].find('Tutorial Session') != -1
+  # make sure that the session wasn't canceled
   is_event_canceled = events[i]['title'].find('Canceled') == 1
 
+  # add the event to the events.txt file so we don't email the student again about the same session
   events_file = open('events.txt', 'r')
   already_emailed = events_file.read().find(events[i]['guid']) != -1
 
@@ -75,32 +86,41 @@ for i in range(len(events)):
       if student_email == students[j][3]:
         timezone = students[j][5]
 
+    # change the time to the student's timezone
     session_date = events[i]['localStartDate']
     session_date = datetime.now().replace(year=session_date[1], month=session_date[2], day=session_date[3], hour=session_date[4], minute=session_date[5])
     session_date = session_date.astimezone(pytz.timezone('US/' + timezone))
     session_date = session_date.strftime('%a %b %d %I:%M %p') + ' ' + timezone + ' Time'
 
-    read_email_body = open('./templates/session_confirmation.html')
-    email_body = read_email_body.read()
+    email_body_file = open('./templates/session_confirmation.html')
+    email_body = email_body_file.read()
+
+    # replace the template with student and tutor info
     email_body = email_body.replace('{{name}}', student_first_name)
     email_body = email_body.replace('{{time}}', session_date)
-    email_body = email_body.replace('{{zoom_link}}', 'https://zoom.us/j/5291031083?pwd=WWJBWndUM0tTWVIyejZmaGNPQUZXUT09')
+    email_body = email_body.replace('{{zoom_link}}', SETTINGS['zoom_link'])
+    email_body = email_body.replace('{{zoom_password}}', SETTINGS['zoom_password'])
+    email_body = email_body.replace('{{tutor_name}}', SETTINGS['tutor_name'])
 
     import sendgrid
     from sendgrid.helpers.mail import *
 
-    sg = sendgrid.SendGridAPIClient(api_key='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')
-    from_email = Email("me@jairedjawed.com", "Jaired Jawed")
+    sg = sendgrid.SendGridAPIClient(api_key=SETTINGS['sendgrid_key'])
+    from_email = Email(SETTINGS['email'], SETTINGS['tutor_name'])
+
     to_email = To(student_email)
-    subject = "Coding Bootcamp Tutorial Confirmation " + session_date
+
+    subject = "Coding Bootcamp: Tutorial Confirmation " + session_date
     content = Content("text/html", email_body)
 
+    # Always CC central support when emailing students
     cc_email = Email('centraltutorsupport@bootcampspot.com')
 
     p = Personalization()
     p.add_to(to_email)
     p.add_cc(cc_email)
 
+    # send the session confirmation email to the student
     mail = Mail(from_email, to_email, subject, content)
     mail.add_personalization(p)
 
@@ -111,4 +131,4 @@ for i in range(len(events)):
     print(response.body)
     print(response.headers)
 
-    read_email_body.close()
+    email_body_file.close()
