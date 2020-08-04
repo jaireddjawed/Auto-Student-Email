@@ -1,0 +1,11 @@
+{
+  "sheet_title": "YOUR_SHEET_NAME",
+  "sendgrid_key": "YOUR_SENDGRID_KEY",
+  "tutor_name": "YOUR_NAME",
+  "calendly_link": "YOUR_CALENDLY_LINK",
+  "email": "YOUR_EMAIL_ADDRESS",
+  "icloud_email": "YOUR_ICLOUD_EMAIL",
+  "icloud_password": "YOUR_ICLOUD_PASSWORD",
+  "zoom_link": "YOUR_ZOOM_LINK",
+  "zoom_password": "YOUR_ZOOM_PASSWORD"
+}
