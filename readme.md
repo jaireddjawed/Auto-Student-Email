@@ -35,7 +35,7 @@ pip3 install pyicloud numpy gspread oauth2client
 ### Create Sendgrid API Key
 * On the Sendgrid dashboard, click "Settings" and then click "API Keys"
 * Create an API key and save it in ```settings.json```
-* To prevent your messages from being sent into spam, [verify your domain](https://sendgrid.com/docs/ui/account-and-settings/how-to-set-up-domain-authentication/)
+* To prevent your messages from being sent into spam, [verify the domain](https://sendgrid.com/docs/ui/account-and-settings/how-to-set-up-domain-authentication/) you'll be sending emails from
 
 ### Settings.json
 * Change the default settings in ```settings.json``` to your custom settings
@@ -58,10 +58,3 @@ python3 session_confirmation.py
 Select your phone number and wait until Apple calls you and gives you the code. **Do not enter the code that was given to you from your Apple device. It will not work.**
 
 * The script will automatically adjust the session time to the student's time zone.
-
-# Automatically Run Scripts (macOS Only)
-
-* Open the ```Calendar``` Application
-* Create a new event
-* Name the event and click under ```alert```, select ```Open File```
-* Choose the ```Automator``` File
