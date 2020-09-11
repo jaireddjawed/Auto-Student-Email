@@ -17,7 +17,7 @@ if api.requires_2sa:
   for i in range(len(devices)):
     print(str(i) + '. ' + devices[i]['phoneNumber'])
 
-  deviceId = int(input('Enter the device id: '))
+  deviceId = int(input('Enter the device index #: '))
   device = devices[deviceId]
 
   if not api.send_verification_code(device):
@@ -25,7 +25,7 @@ if api.requires_2sa:
     exit(1)
 
   while True:
-    code = click.prompt('Enter the verification code: ')
+    code = click.prompt('Enter the verification code')
     if api.validate_verification_code(device, code):
       break
     else:
