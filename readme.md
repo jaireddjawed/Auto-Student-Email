@@ -55,6 +55,6 @@ python3 session_confirmation.py
 ```
 
 * When you run the script for the first time, it will ask to send a code to the phone number associated with your iCloud account.
-Select your phone number and wait until Apple calls you and gives you the code. **Do not enter the code that was given to you from your Apple device. It will not work.**
+Select your phone number and wait until Apple calls you and gives you the code. **Do not enter the code that was given to you through a push notification. It will not work.**
 
 * The script will automatically adjust the session time to the student's time zone.
