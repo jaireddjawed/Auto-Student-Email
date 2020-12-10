@@ -36,7 +36,7 @@ pip3 install pyicloud numpy gspread oauth2client
 ### Create Sendgrid API Key
 * On the Sendgrid dashboard, click "Settings" and then click "API Keys"
 * Create an API key and save it in ```settings.json```
-* To prevent your messages from being sent into spam, [verify your domain](https://sendgrid.com/docs/ui/account-and-settings/how-to-set-up-domain-authentication/) you'll be sending emails from
+* To prevent your messages from being sent into spam, [verify the domain](https://sendgrid.com/docs/ui/account-and-settings/how-to-set-up-domain-authentication/) you'll be sending emails from
 
 ### Settings.json
 * Change the default settings in ```settings.json``` to your custom settings
