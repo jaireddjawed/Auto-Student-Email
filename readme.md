@@ -8,7 +8,7 @@ Automatically and easily send out session confirmation emails, new student email
 * [Google](https://google.com) Account
 * [Sendgrid](https://www.sendgrid.com) Account
 * Have [Python 3](https://www.python.org/) and [Pip](https://pip.pypa.io/en/stable) Installed
-* Own your own domain
+* Own a domain. I recommend using Google Domains.
 
 # Setup
 ### Connect your iCloud Account to Calendly
